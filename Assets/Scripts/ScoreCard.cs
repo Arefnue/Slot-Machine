@@ -12,19 +12,21 @@ public class ScoreCard : MonoBehaviour
         A
     }
 
+    public CardType MyCardType => myCardType;
     [SerializeField] private CardType myCardType;
     [SerializeField] private SpriteRenderer mySpriteRenderer;
     [SerializeField] private Sprite myNormalSprite;
     [SerializeField] private Sprite myBlurSprite;
 
-    public CardType GetCardType()
+    public Vector3 LocalPosition
     {
-        return myCardType;
+        get => transform.localPosition;
+        set => transform.localPosition = value;
     }
     
     public void ChangeCardSprite(bool isBlur)
     {
         mySpriteRenderer.sprite = isBlur ?  myBlurSprite : myNormalSprite;
     }
-    
+
 }
