@@ -13,41 +13,29 @@ public class SlotController : MonoBehaviour
         Slow
     }
     
-    public List<ScoreCard> scoreCardList;
-
+    [Header("Score Cards")]
+    [SerializeField] private List<ScoreCard> scoreCardList;
+    
+    [Header("Settings")]
     [SerializeField] private float spinSpeed = 5f;
     [SerializeField] private float bottomThreshold = -7.5f;
     [SerializeField] private float topThreshold = 5f;
     [SerializeField] private float gapBetweenCards = 2.5f;
+    [SerializeField] private AnimationCurve stopSpinSpeedCurve;
     
-    public ScoreCard SelectedScoreCard { get; set; }
+    public ScoreCard SelectedScoreCard { get; private set; }
     
     private bool _canSpin=false;
     private bool _isSpinning = false;
     private StopType _myStopType = StopType.Instant;
     private ScoreCard.CardType _targetCardType = ScoreCard.CardType.A;
+  
     
-    public void StartSpinning()
-    {
-        if (!_canSpin && !_isSpinning)
-        {
-            _isSpinning = true;
-            _canSpin = true;
-            StartCoroutine(SlotTurnRoutine());
-        }
-    }
+    #region MainRoutine
 
-    public void StopSpinning(ScoreCard.CardType cardType,StopType stopType = StopType.Instant)
-    {
-        _myStopType = stopType;
-        _canSpin = false;
-        _targetCardType = cardType;
-    }
-    
     private IEnumerator SlotTurnRoutine()
     {
         var waitFrame = new WaitForEndOfFrame();
-        var timer = 0f;
         
         scoreCardList.ForEach(x=>x.ChangeCardSprite(true));
 
@@ -58,45 +46,54 @@ public class SlotController : MonoBehaviour
         scoreCardList.ForEach(x=>x.ChangeCardSprite(false));
 
         SelectedScoreCard = scoreCardList.FirstOrDefault(x => x.MyCardType == _targetCardType);
-        
-        switch (_myStopType)
+
+        yield return _myStopType switch
         {
-            case StopType.Instant:
-
-                yield return StartCoroutine(StopInstant());
-                
-                break;
-            case StopType.Normal:
-                
-                break;
-            case StopType.Slow:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-        
+            StopType.Instant => StartCoroutine(StopSpinningRoutine()),
+            StopType.Normal => StartCoroutine(StopSpinningRoutine(waitFrame, 1f)),
+            StopType.Slow => StartCoroutine(StopSpinningRoutine(waitFrame, 2.25f)),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
-
-    private IEnumerator StopInstant()
+    #endregion
+    
+    #region SpinRoutines
+    private IEnumerator StopSpinningRoutine()
     {
         yield return new WaitUntil(() => SelectedScoreCard.LocalPosition.y.IsBetweenRange(0, gapBetweenCards));
         
-        yield return new WaitUntil(() => SelectedScoreCard.LocalPosition.y <= 0.1f);
+        yield return new WaitUntil(() => SelectedScoreCard.LocalPosition.y <= 0.001f);
         SnapCards();
         _isSpinning = false;
         
     }
-    
-    private void SnapCards()
+    private IEnumerator StopSpinningRoutine(WaitForEndOfFrame waitFrame,float slowDuration)
     {
-        foreach (var scoreCard in scoreCardList)
+        var timer = 0f;
+        var oldSpinSpeed = spinSpeed;
+        while (true)
         {
-            var cardLocal = scoreCard.LocalPosition;
-            cardLocal.y = cardLocal.y.RoundTo(gapBetweenCards);
-            scoreCard.LocalPosition = cardLocal;
-        }
-    }
+            timer += Time.deltaTime;
 
+            spinSpeed = oldSpinSpeed*stopSpinSpeedCurve.Evaluate(timer/slowDuration);
+            
+            if (timer>=slowDuration)
+            {
+                break;
+            }
+
+            yield return waitFrame;
+        }
+        
+        yield return new WaitUntil(() => SelectedScoreCard.LocalPosition.y.IsBetweenRange(0, gapBetweenCards));
+        
+        yield return new WaitUntil(() => SelectedScoreCard.LocalPosition.y <= 0.001f);
+       
+        SnapCards();
+        _isSpinning = false;
+        spinSpeed = oldSpinSpeed;
+        
+    }
     private IEnumerator SpinRoutine(WaitForEndOfFrame waitFrame)
     {
         while (_isSpinning)
@@ -116,6 +113,33 @@ public class SlotController : MonoBehaviour
         }
 
     }
+
+    #endregion
     
-    
+    #region Methods
+    public void StartSpinning()
+    {
+        if (_canSpin || _isSpinning) return;
+        
+        _isSpinning = true;
+        _canSpin = true;
+        StartCoroutine(SlotTurnRoutine());
+    }
+    public void StopSpinning(ScoreCard.CardType cardType,StopType stopType = StopType.Instant)
+    {
+        _myStopType = stopType;
+        _canSpin = false;
+        _targetCardType = cardType;
+    }
+    private void SnapCards()
+    {
+        foreach (var scoreCard in scoreCardList)
+        {
+            var cardLocal = scoreCard.LocalPosition;
+            cardLocal.y = cardLocal.y.RoundTo(gapBetweenCards);
+            scoreCard.LocalPosition = cardLocal;
+        }
+    }
+
+    #endregion
 }

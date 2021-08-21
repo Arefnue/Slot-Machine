@@ -9,7 +9,7 @@ public class SlotMachineManager : MonoBehaviour
     [SerializeField] private float slotMinDelayTime = 0.1f;
     [SerializeField] private float slotMaxDelayTime = 0.5f;
 
-    private bool _canWin = false;
+    private bool _isSlowStop = true;
     
     private void Update()
     {
@@ -43,15 +43,15 @@ public class SlotMachineManager : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(slotMinDelayTime, slotMaxDelayTime));
             var slotController = slotControllerList[i];
 
-            // if (i==(slotControllerList.Count-1))
-            // {
-            //     slotController.StopSpinning(_canWin ? SlotController.StopType.Slow : SlotController.StopType.Normal);
-            // }
-            // else
-            // {
-            //     slotController.StopSpinning();
-            // }
-            slotController.StopSpinning(ScoreCard.CardType.A);
+            if (i==(slotControllerList.Count-1))
+            {
+                slotController.StopSpinning(ScoreCard.CardType.A,_isSlowStop ? SlotController.StopType.Slow : SlotController.StopType.Normal);
+            }
+            else
+            {
+                slotController.StopSpinning(ScoreCard.CardType.A);
+            }
+           
         }
     }
     
