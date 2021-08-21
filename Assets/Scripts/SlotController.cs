@@ -27,7 +27,7 @@ public class SlotController : MonoBehaviour
     [SerializeField] private float normalSpinStopTime = 1f;
     [SerializeField] private float slowSpinStopTime = 2.25f;
 
-    public float FinishDelayTime => _myStopType == StopType.Slow ? slowSpinStopTime : normalSpinStopTime;
+    public float FinishDelayTime => _myStopType == StopType.Slow ? slowSpinStopTime : _myStopType == StopType.Normal ? normalSpinStopTime : 0.2f;
     public ScoreCard SelectedScoreCard { get; private set; }
     
     private bool _canSpin=false;

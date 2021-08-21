@@ -22,6 +22,8 @@ public class SlotMachineManager : MonoBehaviour
     private readonly bool _isSlowStop = true;
     private bool _canPlaySlotMachine = true;
 
+    private bool _isWin = false;
+    
     #region Routines
 
     private IEnumerator StartSlotsRoutine()
@@ -54,9 +56,17 @@ public class SlotMachineManager : MonoBehaviour
                 slotController.StopSpinning(ScoreCard.CardType.A);
 
             waitFinishTime += slotController.FinishDelayTime;
+            
         }
-
+        
         yield return new WaitForSeconds(waitFinishTime);
+
+        slotControllerList.ForEach(slotController => _isWin = slotController.SelectedScoreCard.MyCardType == slotControllerList[0].SelectedScoreCard.MyCardType);
+       
+        if (_isWin)
+        {
+            Debug.Log("Win");
+        }
         SetPlayButton(true);
     }
 
@@ -66,7 +76,11 @@ public class SlotMachineManager : MonoBehaviour
     
     public void OnPlaySlotMachine()
     {
-        if (_canPlaySlotMachine) StartCoroutine(StartSlotsRoutine());
+        if (_canPlaySlotMachine)
+        {
+            _isWin = false;
+            StartCoroutine(StartSlotsRoutine());
+        }
     }
 
     private void SetPlayButton(bool canPlay)
