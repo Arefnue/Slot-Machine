@@ -51,6 +51,9 @@ MonoBehaviour:
   - {fileID: 3097733791162571368}
   - {fileID: 1978679986017325584}
   - {fileID: 9038907100890492180}
+  spinSpeed: 5
+  bottomThreshold: -7.5
+  topThreshold: 5
 --- !u!1 &2747919909338248558
 GameObject:
   m_ObjectHideFlags: 0
