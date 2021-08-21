@@ -13,34 +13,30 @@ public class SlotController : MonoBehaviour
     
 
     private bool _canSpin=false;
-    private bool _isSpinning=false;
+   
 
-    private void Update()
-    {
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            PlaySlot();
-        }
-#endif
-    }
+   
 
-    public void PlaySlot()
+    public void StartSpinning()
     {
-        if (!_isSpinning)
+        if (!_canSpin)
         {
+            _canSpin = true;
             StartCoroutine(SlotTurnRoutine());
         }
-       
+    }
+
+    public void StopSpinning()
+    {
+        _canSpin = false;
     }
 
     private IEnumerator SlotTurnRoutine()
     {
         var waitFrame = new WaitForEndOfFrame();
         var timer = 0f;
-
-        _isSpinning = true;
-        _canSpin = true;
+        
+        scoreCardList.ForEach(x=>x.ChangeCardSprite(true));
         
         while (_canSpin)
         {
@@ -62,6 +58,8 @@ public class SlotController : MonoBehaviour
             
             yield return waitFrame;
         }
+        
+        scoreCardList.ForEach(x=>x.ChangeCardSprite(false));
         
         
     }
