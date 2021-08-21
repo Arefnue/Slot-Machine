@@ -51,7 +51,7 @@ public class SlotMachineManager : MonoBehaviour
             // {
             //     slotController.StopSpinning();
             // }
-            slotController.StopSpinning();
+            slotController.StopSpinning(ScoreCard.CardType.A);
         }
     }
     

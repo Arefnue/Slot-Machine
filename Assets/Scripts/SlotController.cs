@@ -20,10 +20,12 @@ public class SlotController : MonoBehaviour
     [SerializeField] private float topThreshold = 5f;
     [SerializeField] private float gapBetweenCards = 2.5f;
     
-
+    public ScoreCard SelectedScoreCard { get; set; }
+    
     private bool _canSpin=false;
     private bool _isSpinning = false;
     private StopType _myStopType = StopType.Instant;
+    private ScoreCard.CardType _targetCardType = ScoreCard.CardType.A;
     
     public void StartSpinning()
     {
@@ -35,10 +37,11 @@ public class SlotController : MonoBehaviour
         }
     }
 
-    public void StopSpinning(StopType stopType = StopType.Instant)
+    public void StopSpinning(ScoreCard.CardType cardType,StopType stopType = StopType.Instant)
     {
         _myStopType = stopType;
         _canSpin = false;
+        _targetCardType = cardType;
     }
     
     private IEnumerator SlotTurnRoutine()
@@ -54,6 +57,8 @@ public class SlotController : MonoBehaviour
         
         scoreCardList.ForEach(x=>x.ChangeCardSprite(false));
 
+        SelectedScoreCard = scoreCardList.FirstOrDefault(x => x.MyCardType == _targetCardType);
+        
         switch (_myStopType)
         {
             case StopType.Instant:
@@ -74,14 +79,12 @@ public class SlotController : MonoBehaviour
 
     private IEnumerator StopInstant()
     {
-        var centerCardCandidate = scoreCardList.FirstOrDefault(x=>x.LocalPosition.y.IsBetweenRange(0,gapBetweenCards));
-                
-        if (centerCardCandidate)
-        {
-            yield return new WaitUntil(() => centerCardCandidate.LocalPosition.y <= 0.1f);
-            SnapCards();
-            _isSpinning = false;
-        }
+        yield return new WaitUntil(() => SelectedScoreCard.LocalPosition.y.IsBetweenRange(0, gapBetweenCards));
+        
+        yield return new WaitUntil(() => SelectedScoreCard.LocalPosition.y <= 0.1f);
+        SnapCards();
+        _isSpinning = false;
+        
     }
     
     private void SnapCards()
