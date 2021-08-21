@@ -51,7 +51,7 @@ MonoBehaviour:
   - {fileID: 3097733791162571368}
   - {fileID: 1978679986017325584}
   - {fileID: 9038907100890492180}
-  spinSpeed: 5
+  spinSpeed: 25
   bottomThreshold: -7.5
   topThreshold: 5
 --- !u!1 &2747919909338248558
@@ -81,7 +81,7 @@ Transform:
   m_GameObject: {fileID: 2747919909338248558}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 22.290226, y: 1, z: 1}
+  m_LocalScale: {x: 25, y: 1, z: 1}
   m_Children:
   - {fileID: 2747919910047232211}
   m_Father: {fileID: 2747919909246113296}
@@ -179,7 +179,7 @@ SpriteMask:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1a6e50d6d2b48d44390e87df07058c63, type: 3}
-  m_MaskAlphaCutoff: 0.466
+  m_MaskAlphaCutoff: 0
   m_FrontSortingLayerID: 0
   m_BackSortingLayerID: 0
   m_FrontSortingLayer: 0

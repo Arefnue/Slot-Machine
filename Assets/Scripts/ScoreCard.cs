@@ -22,9 +22,9 @@ public class ScoreCard : MonoBehaviour
         return myCardType;
     }
     
-    public void ChangeCardSprite(bool isBlur = false)
+    public void ChangeCardSprite(bool isBlur)
     {
-        mySpriteRenderer.sprite = isBlur ? myNormalSprite : myBlurSprite;
+        mySpriteRenderer.sprite = isBlur ?  myBlurSprite : myNormalSprite;
     }
     
 }
