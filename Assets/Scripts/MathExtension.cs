@@ -6,4 +6,9 @@ public static class MathExtension
     {
         return thisValue >= Mathf.Min(value1, value2) && thisValue <= Mathf.Max(value1, value2);
     }
+
+    public static float RoundTo(this float value, float multipleOf)
+    {
+        return Mathf.Round(value / multipleOf) * multipleOf;
+    }
 }

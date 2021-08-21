@@ -41,11 +41,6 @@ public class SlotController : MonoBehaviour
         _canSpin = false;
     }
     
-    public bool IsBetween(float targetValue, float bound1, float bound2)
-    {
-        return (targetValue >= Math.Min(bound1,bound2) && targetValue <= Math.Max(bound1,bound2));
-    }
-
     private IEnumerator SlotTurnRoutine()
     {
         var waitFrame = new WaitForEndOfFrame();
@@ -63,14 +58,7 @@ public class SlotController : MonoBehaviour
         {
             case StopType.Instant:
 
-                var centerCardCandidate = scoreCardList.FirstOrDefault(x=>x.LocalPosition.y.IsBetweenRange(0,gapBetweenCards));
-
-                if (centerCardCandidate)
-                {
-                    yield return new WaitUntil(() => centerCardCandidate.LocalPosition.y <= 0.0001f);
-                    Debug.Log(centerCardCandidate.MyCardType.ToString());
-                    _isSpinning = false;
-                }
+                yield return StartCoroutine(StopInstant());
                 
                 break;
             case StopType.Normal:
@@ -82,9 +70,28 @@ public class SlotController : MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
         
-        
-        
-        
+    }
+
+    private IEnumerator StopInstant()
+    {
+        var centerCardCandidate = scoreCardList.FirstOrDefault(x=>x.LocalPosition.y.IsBetweenRange(0,gapBetweenCards));
+                
+        if (centerCardCandidate)
+        {
+            yield return new WaitUntil(() => centerCardCandidate.LocalPosition.y <= 0.1f);
+            SnapCards();
+            _isSpinning = false;
+        }
+    }
+    
+    private void SnapCards()
+    {
+        foreach (var scoreCard in scoreCardList)
+        {
+            var cardLocal = scoreCard.LocalPosition;
+            cardLocal.y = cardLocal.y.RoundTo(gapBetweenCards);
+            scoreCard.LocalPosition = cardLocal;
+        }
     }
 
     private IEnumerator SpinRoutine(WaitForEndOfFrame waitFrame)
@@ -104,6 +111,7 @@ public class SlotController : MonoBehaviour
             
             yield return waitFrame;
         }
+
     }
     
     
