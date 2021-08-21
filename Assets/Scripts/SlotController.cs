@@ -16,13 +16,18 @@ public class SlotController : MonoBehaviour
     [Header("Score Cards")]
     [SerializeField] private List<ScoreCard> scoreCardList;
     
-    [Header("Settings")]
+    [Header("Position Settings")]
     [SerializeField] private float spinSpeed = 5f;
     [SerializeField] private float bottomThreshold = -7.5f;
     [SerializeField] private float topThreshold = 5f;
     [SerializeField] private float gapBetweenCards = 2.5f;
-    [SerializeField] private AnimationCurve stopSpinSpeedCurve;
     
+    [Header("Stop Settings")]
+    [SerializeField] private AnimationCurve stopSpinSpeedCurve;
+    [SerializeField] private float normalSpinStopTime = 1f;
+    [SerializeField] private float slowSpinStopTime = 2.25f;
+
+    public float FinishDelayTime => _myStopType == StopType.Slow ? slowSpinStopTime : normalSpinStopTime;
     public ScoreCard SelectedScoreCard { get; private set; }
     
     private bool _canSpin=false;
@@ -50,8 +55,8 @@ public class SlotController : MonoBehaviour
         yield return _myStopType switch
         {
             StopType.Instant => StartCoroutine(StopSpinningRoutine()),
-            StopType.Normal => StartCoroutine(StopSpinningRoutine(waitFrame, 1f)),
-            StopType.Slow => StartCoroutine(StopSpinningRoutine(waitFrame, 2.25f)),
+            StopType.Normal => StartCoroutine(StopSpinningRoutine(waitFrame, normalSpinStopTime)),
+            StopType.Slow => StartCoroutine(StopSpinningRoutine(waitFrame, slowSpinStopTime)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

@@ -17,7 +17,7 @@ public class ScoreCard : MonoBehaviour
     [SerializeField] private SpriteRenderer mySpriteRenderer;
     [SerializeField] private Sprite myNormalSprite;
     [SerializeField] private Sprite myBlurSprite;
-
+    
     public Vector3 LocalPosition
     {
         get => transform.localPosition;
