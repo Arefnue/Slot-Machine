@@ -4,7 +4,7 @@ using SlotMachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Utility
+namespace Others
 {
     public class CoinSpawner : MonoBehaviour
     {

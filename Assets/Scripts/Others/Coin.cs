@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Utility
+namespace Others
 {
     public class Coin : MonoBehaviour
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Others;
 using UnityEngine;
 using UnityEngine.UI;
-using Utility;
 using Random = UnityEngine.Random;
 
 namespace SlotMachine
