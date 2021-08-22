@@ -10,11 +10,16 @@ using Random = UnityEngine.Random;
 
 namespace SlotMachine
 {
+    [Serializable]
     public class ScoreContainer
     {
-        public ScoreTemplate myCard;
-        public bool isOpen;
-        public int myBlock;
+        public int order;
+        public ScoreTemplate scoreTemplate;
+        public ScoreContainer(int order,ScoreTemplate scoreTemplate)
+        {
+            this.order = order;
+            this.scoreTemplate = scoreTemplate;
+        }
     }
     public class SlotMachineManager : MonoBehaviour
     {
@@ -33,74 +38,59 @@ namespace SlotMachine
         [SerializeField] private CoinSpawner coinSpawner;
         [SerializeField] private ScoreChanceData scoreChanceData;
 
-        private List<ScoreContainer> _scoreContainersList = new List<ScoreContainer>();
-      
-        
         private readonly bool _isSlowStop = true;
         private bool _canPlaySlotMachine = true;
-        private float totalChance = 0;
+        private float _totalChance = 0;
         private int _currentSpinCount=0;
         private ScoreTemplate _selectedScoreTemplate;
 
         private bool _isWin = false;
 
+        private List<ScoreContainer> _scoreTemplateList = new List<ScoreContainer>();
         private void Start()
         {
-            totalChance = 0;
-            scoreChanceData.scoreList.ForEach(x=>totalChance+=x.chance);
+            _totalChance = 0;
+            scoreChanceData.scoreList.ForEach(x=>_totalChance+=x.chance);
             
+            _currentSpinCount = PlayerPrefs.GetInt("CurrentSpin");
+            
+            int index = 0;
             foreach (var scoreTemplate in scoreChanceData.scoreList)
             {
-                var newContainer = new ScoreContainer();
-                newContainer.myCard = scoreTemplate;
-                newContainer.myBlock = Mathf.RoundToInt(totalChance / scoreTemplate.chance);
-                newContainer.isOpen = true;
-                _scoreContainersList.Add(newContainer);
-            }
-            
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                for (int i = 0; i < 100; i++)
+                scoreTemplate.Block = Mathf.RoundToInt(_totalChance / scoreTemplate.chance);
+                for (int i = 0; i < scoreTemplate.chance; i++)
                 {
-                    DetermineScore();
+                    _scoreTemplateList.Add(new ScoreContainer(index,scoreTemplate));
+                    index++;
                 }
             }
-        }
 
+        }
         public void DetermineScore()
         {
-            foreach (var scoreContainer in _scoreContainersList)
-            {
-                var mod = _currentSpinCount % scoreContainer.myBlock;
-                if (mod == 0)
-                    scoreContainer.isOpen = true;
-            }
-
-            _selectedScoreTemplate = _scoreContainersList.Find(x => x.isOpen).myCard;
-
-            if (_selectedScoreTemplate == null)
-            {
-                Debug.Log("AAA");
-            }
-
-            _scoreContainersList.FirstOrDefault(x => x.myCard == _selectedScoreTemplate).isOpen = false;
+            
+            _selectedScoreTemplate = _scoreTemplateList.FirstOrDefault(x=>x.order == _currentSpinCount).scoreTemplate;
             
             var str =
                 $"Spin: {_currentSpinCount} --- 1. {_selectedScoreTemplate.scoreOrder[0].ToString()} 2. {_selectedScoreTemplate.scoreOrder[1].ToString()} 3. {_selectedScoreTemplate.scoreOrder[2].ToString()}";
             Debug.Log(str);
             _currentSpinCount++;
         }
-    
+
+
+        public void Save()
+        { 
+            PlayerPrefs.SetInt("CurrentSpin",_currentSpinCount);
+        }
+        
         #region Routines
 
         private IEnumerator StartSlotsRoutine()
         {
             SetPlayButton(false);
 
+            DetermineScore();
+            
             foreach (var slotController in slotControllerList)
             {
                 slotController.StartSpinning();
@@ -120,11 +110,12 @@ namespace SlotMachine
                 yield return new WaitForSeconds(Random.Range(slotMinDelayTime, slotMaxDelayTime));
 
                 var slotController = slotControllerList[i];
+                
                 if (i == slotControllerList.Count - 1)
-                    slotController.StopSpinning(ScoreCard.CardType.A,
+                    slotController.StopSpinning(_selectedScoreTemplate.scoreOrder[i],
                         _isSlowStop ? SlotController.StopType.Slow : SlotController.StopType.Normal);
                 else
-                    slotController.StopSpinning(ScoreCard.CardType.A);
+                    slotController.StopSpinning(_selectedScoreTemplate.scoreOrder[i]);
 
                 waitFinishTime += slotController.FinishDelayTime;
             
@@ -136,8 +127,11 @@ namespace SlotMachine
        
             if (_isWin)
             {
-                Debug.Log("Win");
+                coinSpawner.SpawnCoins(_selectedScoreTemplate.scoreOrder[0]);
             }
+            
+            Save();
+            
             SetPlayButton(true);
         }
 

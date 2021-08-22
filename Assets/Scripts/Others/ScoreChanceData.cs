@@ -17,5 +17,6 @@ namespace Others
         public List<ScoreCard.CardType> scoreOrder;
         [Range(0,100)]
         public float chance;
+        public int Block { get; set; }
     }
 }

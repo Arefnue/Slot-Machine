@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Example Scores
   m_EditorClassIdentifier: 
   scoreList:
-  - scoreOrder: 040000000100000003000000
-    chance: 13
-  - scoreOrder: 010000000100000002000000
-    chance: 13
-  - scoreOrder: 000000000000000004000000
+  - scoreOrder: 030000000400000000000000
     chance: 13
   - scoreOrder: 010000000300000004000000
     chance: 13
-  - scoreOrder: 030000000400000000000000
+  - scoreOrder: 000000000000000004000000
+    chance: 13
+  - scoreOrder: 010000000100000002000000
+    chance: 13
+  - scoreOrder: 040000000100000003000000
     chance: 13
   - scoreOrder: 040000000400000004000000
     chance: 9
