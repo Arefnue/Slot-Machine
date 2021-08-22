@@ -2,7 +2,7 @@
 
 namespace Extensions
 {
-    public static class MathExtension
+    public static class MathExtensions
     {
         public static bool IsBetweenRange(this float thisValue, float value1, float value2)
         {

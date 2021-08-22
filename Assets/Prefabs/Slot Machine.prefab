@@ -190,6 +190,7 @@ MonoBehaviour:
   slotMaxDelayTime: 0.5
   playButton: {fileID: 5374047504846845728}
   coinSpawner: {fileID: 2386649834955004807}
+  scoreChanceData: {fileID: 11400000, guid: f5e377fc12c81a94a809af2a7452522e, type: 2}
 --- !u!1 &5374047505127365369
 GameObject:
   m_ObjectHideFlags: 0
