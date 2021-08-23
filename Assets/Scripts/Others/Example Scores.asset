@@ -13,23 +13,33 @@ MonoBehaviour:
   m_Name: Example Scores
   m_EditorClassIdentifier: 
   scoreList:
-  - scoreOrder: 030000000400000000000000
+  - scoreId: 0
+    scoreOrder: 030000000400000000000000
     chance: 13
-  - scoreOrder: 010000000300000004000000
+  - scoreId: 1
+    scoreOrder: 010000000300000004000000
     chance: 13
-  - scoreOrder: 000000000000000004000000
+  - scoreId: 2
+    scoreOrder: 000000000000000004000000
     chance: 13
-  - scoreOrder: 010000000100000002000000
+  - scoreId: 3
+    scoreOrder: 010000000100000002000000
     chance: 13
-  - scoreOrder: 040000000100000003000000
+  - scoreId: 4
+    scoreOrder: 040000000100000003000000
     chance: 13
-  - scoreOrder: 040000000400000004000000
+  - scoreId: 5
+    scoreOrder: 040000000400000004000000
     chance: 9
-  - scoreOrder: 030000000300000003000000
+  - scoreId: 6
+    scoreOrder: 030000000300000003000000
     chance: 8
-  - scoreOrder: 020000000200000002000000
+  - scoreId: 7
+    scoreOrder: 020000000200000002000000
     chance: 7
-  - scoreOrder: 010000000100000001000000
+  - scoreId: 8
+    scoreOrder: 010000000100000001000000
     chance: 6
-  - scoreOrder: 000000000000000000000000
+  - scoreId: 9
+    scoreOrder: 000000000000000000000000
     chance: 5
