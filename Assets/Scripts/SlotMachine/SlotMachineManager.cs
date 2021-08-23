@@ -47,26 +47,28 @@ namespace SlotMachine
         private bool _isWin = false;
 
         private List<ScoreContainer> _scoreTemplateList = new List<ScoreContainer>();
+
+        private void Awake()
+        {
+            Load();
+        }
+
         private void Start()
         {
-            _totalChance = 0;
-            scoreChanceData.scoreList.ForEach(x => _totalChance += x.chance);
-            _currentSpinCount = PlayerPrefs.GetInt("CurrentSpin", 0);
-
+           
+           
+            Debug.Log(_scoreTemplateList.Count);
             var chanceMod = _currentSpinCount % _totalChance;
 
             if (chanceMod == 0)
             {
-                
+                CalculateScoreChances();
             }
-            CalculateScoreChances();
         }
 
         private void CalculateScoreChances()
         {
-            
-           
-
+            _scoreTemplateList?.Clear();
             //todo Toplam ihtimal kadar score üret
             int index = 0;
             foreach (var scoreTemplate in scoreChanceData.scoreList)
@@ -143,7 +145,11 @@ namespace SlotMachine
                     DetermineScore();
                 }
             }
-            
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Save();
+            }
         }
 
         public void DetermineScore()
@@ -158,9 +164,36 @@ namespace SlotMachine
         }
 
 
-        public void Save()
+        private void Save()
         { 
             PlayerPrefs.SetInt("CurrentSpin",_currentSpinCount);
+
+            for (var i = 0; i < _scoreTemplateList.Count; i++)
+            {
+                var scoreContainer = _scoreTemplateList[i];
+                PlayerPrefs.SetInt($"Score_{i}",scoreContainer.scoreId);
+            }
+        }
+
+        private void Load()
+        {
+            _totalChance = 0;
+            scoreChanceData.scoreList.ForEach(x => _totalChance += x.chance);
+            
+            _currentSpinCount =PlayerPrefs.GetInt("CurrentSpin",0);
+            _scoreTemplateList?.Clear();
+            for (int i = 0; i < _totalChance; i++)
+            {
+                if (!PlayerPrefs.HasKey($"Score_{i}"))
+                {
+                    break;
+                }
+                
+                var scoreId =PlayerPrefs.GetInt($"Score_{i}");
+                
+                _scoreTemplateList.Add(new ScoreContainer(scoreId,scoreChanceData.scoreList.FirstOrDefault(x=>x.scoreId == scoreId)));
+            }
+            
         }
         
         #region Routines
