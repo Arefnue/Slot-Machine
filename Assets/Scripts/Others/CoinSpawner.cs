@@ -23,7 +23,7 @@ namespace Others
             for (int i = 0; i < count; i++)
             {
                 var coin = Instantiate(coinPrefab, coinSpawnTransform);
-                coin.ExplodeCoin(minExplosionValue,maxExplosionValue,coinSpawnTransform.position + new Vector3(Random.Range(-2,2),-1,1),5f,10);
+                coin.ExplodeCoin(minExplosionValue,maxExplosionValue,coinSpawnTransform.position + new Vector3(Random.Range(-2,2),-1,2),5f,10);
             }
         }
         

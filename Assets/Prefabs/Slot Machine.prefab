@@ -184,13 +184,19 @@ MonoBehaviour:
   - {fileID: 4617022505952072929}
   - {fileID: 7363498747218303049}
   - {fileID: 7363498746241745762}
-  minChooseTime: 2
-  maxChooseTime: 5
+  minChooseTime: 1
+  maxChooseTime: 3
   slotMinDelayTime: 0.1
   slotMaxDelayTime: 0.5
+  isSlowStop: 0
   playButton: {fileID: 5374047504846845728}
   coinSpawner: {fileID: 2386649834955004807}
   scoreChanceData: {fileID: 11400000, guid: f5e377fc12c81a94a809af2a7452522e, type: 2}
+  enableOverrideScore: 1
+  overrideScore:
+    scoreId: 0
+    scoreOrder: 000000000000000000000000
+    chance: 0
 --- !u!1 &5374047505127365369
 GameObject:
   m_ObjectHideFlags: 0

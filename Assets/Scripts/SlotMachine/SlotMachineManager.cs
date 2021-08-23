@@ -29,16 +29,19 @@ namespace SlotMachine
         [Header("Settings")]
         [SerializeField] private float minChooseTime = 2f;
         [SerializeField] private float maxChooseTime = 5f;
-
         [SerializeField] private float slotMinDelayTime = 0.1f;
         [SerializeField] private float slotMaxDelayTime = 0.5f;
-    
+        [SerializeField] private bool isSlowStop;
+        
         [Header("References")]
         [SerializeField] private Button playButton;
         [SerializeField] private CoinSpawner coinSpawner;
         [SerializeField] private ScoreChanceData scoreChanceData;
-
-        private readonly bool _isSlowStop = true;
+        
+        [Header("Override")]
+        [SerializeField] private bool enableOverrideScore;
+        [SerializeField] private ScoreTemplate overrideScore;
+        
         private bool _canPlaySlotMachine = true;
         private float _totalChance = 0;
         private int _currentSpinCount=0;
@@ -154,8 +157,15 @@ namespace SlotMachine
 
         public void DetermineScore()
         {
-
-            _selectedScoreTemplate = _scoreTemplateList[_currentSpinCount].scoreTemplate;
+            if (enableOverrideScore)
+            {
+                _selectedScoreTemplate = overrideScore;
+            }
+            else
+            {
+                _selectedScoreTemplate = _scoreTemplateList[_currentSpinCount].scoreTemplate;
+            }
+            
             
             var str =
                 $"Spin: {_currentSpinCount} --- 1. {_selectedScoreTemplate.scoreOrder[0].ToString()} 2. {_selectedScoreTemplate.scoreOrder[1].ToString()} 3. {_selectedScoreTemplate.scoreOrder[2].ToString()}";
@@ -226,7 +236,7 @@ namespace SlotMachine
                 
                 if (i == slotControllerList.Count - 1)
                     slotController.StopSpinning(_selectedScoreTemplate.scoreOrder[i],
-                        _isSlowStop ? SlotController.StopType.Slow : SlotController.StopType.Normal);
+                        isSlowStop ? SlotController.StopType.Slow : SlotController.StopType.Normal);
                 else
                     slotController.StopSpinning(_selectedScoreTemplate.scoreOrder[i]);
 
