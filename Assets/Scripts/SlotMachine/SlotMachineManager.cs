@@ -66,6 +66,17 @@ namespace SlotMachine
             }
         }
 
+        private void OnEnable()
+        {
+            foreach (var slotController in slotControllerList)
+                slotController.OnFinalSpinEnd += OnFinalSpinEnd;
+        }
+        
+        private void OnDisable()
+        {
+            foreach (var slotController in slotControllerList)
+                slotController.OnFinalSpinEnd -= OnFinalSpinEnd;
+        }
 
         #endregion
 
@@ -207,7 +218,6 @@ namespace SlotMachine
 
         private IEnumerator StopSlotsRoutine()
         {
-            var waitFinishTime = 0f;
             for (var i = 0; i < slotControllerList.Count; i++)
             {
                 yield return new WaitForSeconds(Random.Range(slotMinDelayTime, slotMaxDelayTime));
@@ -219,22 +229,19 @@ namespace SlotMachine
                         isSlowStop ? SlotController.StopType.Slow : SlotController.StopType.Normal);
                 else
                     slotController.StopSpinning(_selectedScoreTemplate.scoreOrder[i]);
-
-                waitFinishTime += slotController.FinishDelayTime;
-            
             }
-        
-            yield return new WaitForSeconds(waitFinishTime);
 
-            slotControllerList.ForEach(slotController => _isWin = slotController.SelectedScoreCard.MyCardType == slotControllerList[0].SelectedScoreCard.MyCardType);
-       
-            if (_isWin)
-            {
-                coinSpawner.SpawnCoins(_selectedScoreTemplate.scoreOrder[0]);
-            }
-            
+        }
+
+        private void OnFinalSpinEnd()
+        {
+            slotControllerList.ForEach(slotController =>
+                _isWin = slotController.SelectedScoreCard.MyCardType == slotControllerList[0].SelectedScoreCard.MyCardType);
+
+            if (_isWin) coinSpawner.SpawnCoins(_selectedScoreTemplate.scoreOrder[0]);
+
             Save();
-            
+
             SetPlayButton(true);
         }
 

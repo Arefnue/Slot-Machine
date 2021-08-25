@@ -191,7 +191,7 @@ MonoBehaviour:
   isSlowStop: 0
   playButton: {fileID: 5374047504846845728}
   coinSpawner: {fileID: 2386649834955004807}
-  scoreChanceData: {fileID: 11400000, guid: f5e377fc12c81a94a809af2a7452522e, type: 2}
+  scoreChanceData: {fileID: 11400000, guid: 8a5cb9a5a76a4715aefcb024ba689e18, type: 2}
   enableOverrideScore: 1
   overrideScore:
     scoreId: 0

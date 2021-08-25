@@ -37,6 +37,7 @@ namespace SlotMachine
         private bool _isSpinning = false;
         private StopType _myStopType = StopType.Instant;
         private ScoreCard.CardType _targetCardType = ScoreCard.CardType.A;
+        public Action OnFinalSpinEnd;
         
         #region MainRoutine
         private IEnumerator SlotTurnRoutine()
@@ -71,7 +72,7 @@ namespace SlotMachine
             yield return new WaitUntil(() => SelectedScoreCard.LocalPosition.y <= 0.001f);
             SnapCards();
             _isSpinning = false;
-        
+           
         }
         private IEnumerator StopSpinningRoutine(WaitForEndOfFrame waitFrame,float slowDuration)
         {
@@ -98,7 +99,7 @@ namespace SlotMachine
             SnapCards();
             _isSpinning = false;
             spinSpeed = oldSpinSpeed;
-        
+            OnFinalSpinEnd?.Invoke();
         }
         private IEnumerator SpinRoutine(WaitForEndOfFrame waitFrame)
         {
