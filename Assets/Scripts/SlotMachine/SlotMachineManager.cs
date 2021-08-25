@@ -39,7 +39,7 @@ namespace SlotMachine
         
         [Header("Override")]
         [SerializeField] private bool enableOverrideScore;
-        [SerializeField] private ScoreTemplate overrideScore;
+        [SerializeField] private ScoreCard.CardType overrideScoreHitType;
         
         private bool _canPlaySlotMachine = true;
         private float _totalChance = 0;
@@ -47,8 +47,7 @@ namespace SlotMachine
         private ScoreTemplate _selectedScoreTemplate;
         private bool _isWin = false;
         private List<ScoreContainer> _scoreTemplateList = new List<ScoreContainer>();
-
-
+        
         #region Setup
 
         private void Awake()
@@ -163,7 +162,7 @@ namespace SlotMachine
             }
         }
         
-        #region SaveLoad
+        #region Save/Load
 
         private void Save()
         { 
@@ -232,7 +231,11 @@ namespace SlotMachine
             }
 
         }
+        
+        #endregion
 
+        #region Methods
+        
         private void OnFinalSpinEnd()
         {
             slotControllerList.ForEach(slotController =>
@@ -244,14 +247,11 @@ namespace SlotMachine
 
             SetPlayButton(true);
         }
-
-        #endregion
-
-        #region Methods
         
         private void DetermineScore()
         {
-            _selectedScoreTemplate = enableOverrideScore ? overrideScore : _scoreTemplateList[_currentSpinCount].scoreTemplate;
+            
+            _selectedScoreTemplate = enableOverrideScore ? GetOverrideHitScoreTemplate(overrideScoreHitType) : _scoreTemplateList[_currentSpinCount].scoreTemplate;
             
             var str =
                 $"Spin: {_currentSpinCount} --- 1. {_selectedScoreTemplate.scoreOrder[0].ToString()} 2. {_selectedScoreTemplate.scoreOrder[1].ToString()} 3. {_selectedScoreTemplate.scoreOrder[2].ToString()}";
@@ -259,7 +259,23 @@ namespace SlotMachine
             
             _currentSpinCount++;
         }
-    
+        
+        private ScoreTemplate GetOverrideHitScoreTemplate(ScoreCard.CardType targetCardType)
+        {
+            var newTemplate = new ScoreTemplate();
+
+            newTemplate.scoreId = -1;
+            newTemplate.chance = 100;
+            
+            var newCardList = new List<ScoreCard.CardType>();
+            for (int i = 0; i < slotControllerList.Count; i++)
+                newCardList.Add(targetCardType);
+
+            newTemplate.scoreOrder = newCardList;
+
+            return newTemplate;
+        }
+
         public void OnPlaySlotMachine()
         {
             if (_canPlaySlotMachine)

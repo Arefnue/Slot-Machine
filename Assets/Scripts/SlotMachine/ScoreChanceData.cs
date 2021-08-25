@@ -18,5 +18,6 @@ namespace SlotMachine
         [Range(0,100)]
         public float chance;
         public int Block { get; set; }
+        
     }
 }
