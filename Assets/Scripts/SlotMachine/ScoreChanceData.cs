@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using SlotMachine;
 using UnityEngine;
 
-namespace Others
+namespace SlotMachine
 {
     [CreateAssetMenu(fileName = "Score Chance Data", menuName = "Data/Score Chance", order = 0)]
     public class ScoreChanceData : ScriptableObject

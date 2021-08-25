@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SlotMachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Others
+namespace SlotMachine
 {
     public class CoinSpawner : MonoBehaviour
     {
-        
         [SerializeField] private List<ScoreCardCoinData> scoreCardCoinDataList;
         [SerializeField] private Coin coinPrefab;
         [SerializeField] private Transform coinSpawnTransform;
         [SerializeField] private float minExplosionValue;
         [SerializeField] private float maxExplosionValue;
-        
         
         public void SpawnCoins(ScoreCard.CardType targetType)
         {
@@ -26,8 +23,6 @@ namespace Others
                 coin.ExplodeCoin(minExplosionValue,maxExplosionValue,coinSpawnTransform.position + new Vector3(Random.Range(-2,2),-1,2),5f,10);
             }
         }
-        
-        
     }
     
     [Serializable]

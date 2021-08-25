@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Extensions;
-using Others;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -46,10 +45,11 @@ namespace SlotMachine
         private float _totalChance = 0;
         private int _currentSpinCount=0;
         private ScoreTemplate _selectedScoreTemplate;
-
         private bool _isWin = false;
-
         private List<ScoreContainer> _scoreTemplateList = new List<ScoreContainer>();
+
+
+        #region Setup
 
         private void Awake()
         {
@@ -58,9 +58,6 @@ namespace SlotMachine
 
         private void Start()
         {
-           
-           
-            Debug.Log(_scoreTemplateList.Count);
             var chanceMod = _currentSpinCount % _totalChance;
 
             if (chanceMod == 0)
@@ -69,45 +66,62 @@ namespace SlotMachine
             }
         }
 
+
+        #endregion
+
+        #region Test
+
+        private void Update()
+        {
+#if UNITY_EDITOR
+            
+            if (Input.GetKeyDown(KeyCode.T)) 
+                for (int i = 0; i < 100; i++)
+                    DetermineScore();
+
+            if (Input.GetKeyDown(KeyCode.S)) Save();
+            
+            if (Input.GetKeyDown(KeyCode.L)) Load();
+           
+#endif
+        }
+
+        #endregion
+        
+        //todo Daha iyi bir algoritma bul
         private void CalculateScoreChances()
         {
             _scoreTemplateList?.Clear();
-            //todo Toplam ihtimal kadar score üret
+            
+            //Toplam ihtimal kadar score üret
             int index = 0;
             foreach (var scoreTemplate in scoreChanceData.scoreList)
             {
                 scoreTemplate.Block = Mathf.CeilToInt(_totalChance / scoreTemplate.chance);
-                for (int i = 0; i < scoreTemplate.chance; i++)
-                {
+                
+                for (int i = 0; i < scoreTemplate.chance; i++, index++) 
                     _scoreTemplateList.Add(new ScoreContainer(scoreTemplate.scoreId, scoreTemplate));
-                    index++;
-                }
             }
 
             _scoreTemplateList.Shuffle();
 
-            //todo Her block için kontrol et
+            //Her block için kontrol et
             Dictionary<int, List<ScoreContainer>> blockDict = new Dictionary<int, List<ScoreContainer>>();
 
             foreach (var scoreTemplate in scoreChanceData.scoreList)
-            {
                 blockDict.Add(scoreTemplate.scoreId, new List<ScoreContainer>());
-            }
-
+            
             foreach (var scoreTemplate in scoreChanceData.scoreList)
             {
                 for (int i = 0; i < scoreTemplate.chance; i++)
                 {
                     for (int j = 0; j < scoreTemplate.Block; j++)
                     {
-                        var a = (i * scoreTemplate.Block) + j;
+                        var blockIndex = (i * scoreTemplate.Block) + j;
 
-                        if (a >= _totalChance)
-                        {
-                            continue;
-                        }
-
-                        var card = _scoreTemplateList[a];
+                        if (blockIndex >= _totalChance)  continue;
+                        
+                        var card = _scoreTemplateList[blockIndex];
                         if (card.scoreTemplate.scoreId == scoreTemplate.scoreId)
                         {
                             blockDict[scoreTemplate.scoreId].Add(card);
@@ -116,9 +130,8 @@ namespace SlotMachine
                     }
                 }
             }
-
-
-            //todo Score olmayan blocklara score ekle
+            
+            //Score olmayan blocklara score ekle
             foreach (var scoreTemplate in scoreChanceData.scoreList)
             {
                 for (var i = 0; i < blockDict[scoreTemplate.scoreId].Count; i++)
@@ -138,41 +151,8 @@ namespace SlotMachine
                 }
             }
         }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                for (int i = 0; i < 100; i++)
-                {
-                    DetermineScore();
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Save();
-            }
-        }
-
-        public void DetermineScore()
-        {
-            if (enableOverrideScore)
-            {
-                _selectedScoreTemplate = overrideScore;
-            }
-            else
-            {
-                _selectedScoreTemplate = _scoreTemplateList[_currentSpinCount].scoreTemplate;
-            }
-            
-            
-            var str =
-                $"Spin: {_currentSpinCount} --- 1. {_selectedScoreTemplate.scoreOrder[0].ToString()} 2. {_selectedScoreTemplate.scoreOrder[1].ToString()} 3. {_selectedScoreTemplate.scoreOrder[2].ToString()}";
-            Debug.Log(str);
-            _currentSpinCount++;
-        }
-
+        
+        #region SaveLoad
 
         private void Save()
         { 
@@ -192,19 +172,19 @@ namespace SlotMachine
             
             _currentSpinCount =PlayerPrefs.GetInt("CurrentSpin",0);
             _scoreTemplateList?.Clear();
+            
             for (int i = 0; i < _totalChance; i++)
             {
-                if (!PlayerPrefs.HasKey($"Score_{i}"))
-                {
-                    break;
-                }
-                
+                if (!PlayerPrefs.HasKey($"Score_{i}")) break;
+               
                 var scoreId =PlayerPrefs.GetInt($"Score_{i}");
                 
                 _scoreTemplateList.Add(new ScoreContainer(scoreId,scoreChanceData.scoreList.FirstOrDefault(x=>x.scoreId == scoreId)));
             }
             
         }
+
+        #endregion
         
         #region Routines
 
@@ -261,6 +241,17 @@ namespace SlotMachine
         #endregion
 
         #region Methods
+        
+        private void DetermineScore()
+        {
+            _selectedScoreTemplate = enableOverrideScore ? overrideScore : _scoreTemplateList[_currentSpinCount].scoreTemplate;
+            
+            var str =
+                $"Spin: {_currentSpinCount} --- 1. {_selectedScoreTemplate.scoreOrder[0].ToString()} 2. {_selectedScoreTemplate.scoreOrder[1].ToString()} 3. {_selectedScoreTemplate.scoreOrder[2].ToString()}";
+            Debug.Log(str);
+            
+            _currentSpinCount++;
+        }
     
         public void OnPlaySlotMachine()
         {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Others
+namespace SlotMachine
 {
     public class Coin : MonoBehaviour
     {

@@ -37,10 +37,8 @@ namespace SlotMachine
         private bool _isSpinning = false;
         private StopType _myStopType = StopType.Instant;
         private ScoreCard.CardType _targetCardType = ScoreCard.CardType.A;
-  
-    
+        
         #region MainRoutine
-
         private IEnumerator SlotTurnRoutine()
         {
             var waitFrame = new WaitForEndOfFrame();
@@ -119,7 +117,6 @@ namespace SlotMachine
             
                 yield return waitFrame;
             }
-
         }
 
         #endregion
