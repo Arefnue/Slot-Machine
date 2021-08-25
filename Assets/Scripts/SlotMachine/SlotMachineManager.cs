@@ -80,6 +80,8 @@ namespace SlotMachine
         #endregion
 
         #region Test
+        
+        
 
         private void Update()
         {
@@ -99,7 +101,7 @@ namespace SlotMachine
         #endregion
         
         //todo Daha iyi bir algoritma bul
-        private void CalculateScoreChances()
+        public void CalculateScoreChances()
         {
             _scoreTemplateList?.Clear();
             
