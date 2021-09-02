@@ -79,6 +79,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  normalSpinStopTime: 1
+  slowSpinStopTime: 2.25
 --- !u!1 &2747919909338248558
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,6 +92,7 @@ GameObject:
   - component: {fileID: 2747919909338248561}
   - component: {fileID: 2747919909338248560}
   - component: {fileID: 2747919909338248563}
+  - component: {fileID: 875811916260856111}
   m_Layer: 0
   m_Name: Slot_back
   m_TagString: Untagged
@@ -213,6 +216,18 @@ SpriteMask:
   m_BackSortingOrder: -10
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
+--- !u!114 &875811916260856111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2747919909338248558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ee50ee35b6c57540baa1d41d269185e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2747919910047232208
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,6 +239,7 @@ GameObject:
   - component: {fileID: 2747919910047232211}
   - component: {fileID: 2747919910047232210}
   - component: {fileID: 2747919910047232213}
+  - component: {fileID: 1115090554051435048}
   m_Layer: 0
   m_Name: Slot_gradient
   m_TagString: Untagged
@@ -346,6 +362,18 @@ SpriteMask:
   m_BackSortingOrder: -162
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1115090554051435048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2747919910047232208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ee50ee35b6c57540baa1d41d269185e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7620167443997268785
 GameObject:
   m_ObjectHideFlags: 0

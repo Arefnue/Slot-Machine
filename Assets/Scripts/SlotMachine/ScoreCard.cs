@@ -25,7 +25,7 @@ namespace SlotMachine
             set => transform.localPosition = value;
         }
     
-        public void ChangeCardSprite(bool isBlur) => mySpriteRenderer.sprite = isBlur ?  myBlurSprite : myNormalSprite;
+        public void ChangeCardSprite(bool isBlur) => mySpriteRenderer.sprite = AtlasManager.instance.GetMainAtlas.GetSprite(isBlur ? myBlurSprite.name: myNormalSprite.name);
         
     }
 }
