@@ -44,7 +44,7 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: af916af56e9cc634380250c8dc9227c0, type: 3}
-    totalSpriteSurfaceArea: 2480924
+    totalSpriteSurfaceArea: 1202712
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -53,15 +53,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 0e4371001e633974bb3263117c82f2f8, type: 3}
   - {fileID: 21300000, guid: 336f1f70d1b788242a958859663869c3, type: 3}
   - {fileID: 21300000, guid: cea82341f022d3c4b8df2d980fe7e382, type: 3}
-  - {fileID: 7858416400693487702, guid: d4033ff1470eff04d8da07917302616b, type: 3}
-  - {fileID: 7944876737930998293, guid: d4033ff1470eff04d8da07917302616b, type: 3}
-  - {fileID: -3076578299200870413, guid: d4033ff1470eff04d8da07917302616b, type: 3}
-  - {fileID: -6129140024025953609, guid: d4033ff1470eff04d8da07917302616b, type: 3}
-  - {fileID: -8722020019358736109, guid: d4033ff1470eff04d8da07917302616b, type: 3}
-  - {fileID: 7432920796079150873, guid: d4033ff1470eff04d8da07917302616b, type: 3}
-  - {fileID: 8003260396191338441, guid: d4033ff1470eff04d8da07917302616b, type: 3}
-  - {fileID: 2154074400079490951, guid: d4033ff1470eff04d8da07917302616b, type: 3}
-  - {fileID: 6795138796809377442, guid: d4033ff1470eff04d8da07917302616b, type: 3}
   - {fileID: 21300000, guid: 1c384ac2cc840bf41aaef4299fa00356, type: 3}
   - {fileID: 21300000, guid: 16749f7562eaf964d8781dc281d2bc46, type: 3}
   - {fileID: 21300000, guid: 8d4d4166dc96fc54d89cdd871a173814, type: 3}
@@ -76,15 +67,6 @@ SpriteAtlas:
   - Wild_00_blur
   - A_00
   - Jackpot_00_blur
-  - coins_6
-  - coins_7
-  - coins_4
-  - coins_5
-  - coins_2
-  - coins_3
-  - coins_0
-  - coins_1
-  - coins_8
   - Seven_00
   - A_00_blur
   - Seven_00_blur

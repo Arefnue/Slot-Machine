@@ -10,22 +10,19 @@ namespace SlotMachine
     public class CoinSpawner : MonoBehaviour
     {
         [SerializeField] private List<ScoreCardCoinData> scoreCardCoinDataList;
-        [SerializeField] private Coin coinPrefab;
-        [SerializeField] private Transform coinSpawnTransform;
-        [SerializeField] private float minExplosionValue;
-        [SerializeField] private float maxExplosionValue;
-        
+        [SerializeField] private ParticleSystem coinParticle;
+
         public void SpawnCoins(ScoreCard.CardType targetType)
         {
-            var count = scoreCardCoinDataList.FirstOrDefault(x => x.cardType == targetType).coinCount;
-            for (int i = 0; i < count; i++)
+            if (scoreCardCoinDataList != null)
             {
-                var coin = Instantiate(coinPrefab, coinSpawnTransform);
-                coin.ExplodeCoin(minExplosionValue,maxExplosionValue,
-                    coinSpawnTransform.position + new Vector3(Random.Range(-2,2),-1,2),
-                    5f,
-                    10);
+                var count = scoreCardCoinDataList.FirstOrDefault(x => x.cardType == targetType).coinCount;
+                var tempEmission =coinParticle.emission;
+                tempEmission.enabled = true;
+                tempEmission.rateOverTimeMultiplier = count;
             }
+
+            coinParticle.Play();
         }
         
     }
