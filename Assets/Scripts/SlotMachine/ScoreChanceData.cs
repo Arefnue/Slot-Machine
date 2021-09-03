@@ -13,11 +13,8 @@ namespace SlotMachine
     [Serializable]
     public class ScoreTemplate
     {
-        public int scoreId;
         public List<ScoreCard.CardType> scoreOrder;
         [Range(0,100)]
         public float chance;
-        public int Block { get; set; }
-        
     }
 }
