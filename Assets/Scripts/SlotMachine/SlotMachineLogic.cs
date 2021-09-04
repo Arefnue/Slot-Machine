@@ -21,10 +21,13 @@ namespace SlotMachine
 
                 if (mod == 0)
                 {
+                    scoreTemplateContainer.RepeatCount = 1;
                     scoreTemplateContainer.isOpen = true;
                 }
                 
-                var newChance = (float)1 / (scoreTemplateContainer.MyBlock - mod);
+                scoreTemplateContainer.RepeatCount++;
+                
+                var newChance = (float)1 / (scoreTemplateContainer.RepeatCount - mod);
                 
                 if (scoreTemplateContainer.isOpen && newChance>bestChance)
                 {
@@ -51,14 +54,23 @@ namespace SlotMachine
     [Serializable]
     public class ScoreTemplateContainer
     {
+       
         public ScoreTemplate myTemplate;
-        public int MyBlock { get; private set; }
+        public int MyBlock => _myBlock;
+        private int _myBlock;
         public bool isOpen;
-
+        
+        public int RepeatCount
+        {
+            get => _repeatCount;
+            set => _repeatCount = value;
+        }
+        private int _repeatCount;
         public ScoreTemplateContainer(ScoreTemplate scoreTemplate,bool isOpen = true)
         {
+            
             myTemplate = scoreTemplate;
-            MyBlock = Mathf.RoundToInt(100/myTemplate.chance);
+            _myBlock = Mathf.RoundToInt(100/myTemplate.chance);
             this.isOpen = isOpen;
         }
     }

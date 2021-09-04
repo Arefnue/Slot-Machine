@@ -1,17 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Extensions;
 using NUnit.Framework;
 using SlotMachine;
 using UnityEngine;
-using UnityEngine.TestTools;
+
 
 namespace Tests
 {
     public class SlotMachineTest
     {
-
+        
         private List<ScoreCard.CardType> GetScoreOrder(ScoreCard.CardType t1,ScoreCard.CardType t2, ScoreCard.CardType t3)
         {
             var newList = new List<ScoreCard.CardType>();
@@ -21,15 +20,29 @@ namespace Tests
             return newList;
         }
 
-        private void TestTargetChance(List<ScoreCard.CardType> targetOrder)
+        private bool IsSameOrder(List<ScoreCard.CardType> p1,List<ScoreCard.CardType> p2)
+        {
+            for (int i = 0; i < p1.Count; i++)
+            {
+                if (p1[i] != p2[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
+        
+        private List<(int,ScoreTemplateContainer)> TestTargetChance(List<ScoreCard.CardType> targetOrder)
         {
             List<ScoreTemplateContainer> scoreTemplateContainerList = new List<ScoreTemplateContainer>();
-
+            
             List<ScoreTemplate> scoreList = new List<ScoreTemplate>();
             
             var order1 = new ScoreTemplate(GetScoreOrder(ScoreCard.CardType.A, ScoreCard.CardType.Wild, ScoreCard.CardType.Bonus), 13);
             scoreList.Add(order1);
-            var order2 = new ScoreTemplate(GetScoreOrder(ScoreCard.CardType.Wild, ScoreCard.CardType.Wild, ScoreCard.CardType.Wild), 13);
+            var order2 = new ScoreTemplate(GetScoreOrder(ScoreCard.CardType.Wild, ScoreCard.CardType.Wild, ScoreCard.CardType.Seven), 13);
             scoreList.Add(order2);
             var order3 = new ScoreTemplate(GetScoreOrder(ScoreCard.CardType.Jackpot, ScoreCard.CardType.Jackpot, ScoreCard.CardType.A), 13);
             scoreList.Add(order3);
@@ -53,39 +66,39 @@ namespace Tests
             {
                 scoreTemplateContainerList.Add(new ScoreTemplateContainer(scoreTemplate));
             }
+           
+            ScoreTemplateContainer scoreTemplateContainer = scoreTemplateContainerList.FirstOrDefault(x => IsSameOrder(targetOrder,x.myTemplate.scoreOrder));
             
-            ScoreTemplateContainer scoreTemplateContainer = scoreTemplateContainerList.FirstOrDefault(x => x.myTemplate.scoreOrder == targetOrder);
-
             List<(int, ScoreTemplateContainer)> scoreTemplateTupleList = new List<(int, ScoreTemplateContainer)>();
             for (int i = 0; i < 100; i++)
             {
                 var selected = SlotMachineLogic.GetMostPossibleScoreTemplate(i, scoreTemplateContainerList);
+               
                 if (selected == scoreTemplateContainer?.myTemplate)
                 {
+                   
                     scoreTemplateTupleList.Add((i,scoreTemplateContainer));
                 }
             }
 
-            bool canPass = true;
+            bool canPass = false;
             for (int i = 0; i < scoreTemplateTupleList.Count; i++)
             {
-                if (!MathExtensions.IsBetweenRange(scoreTemplateTupleList[i].Item1,i*scoreTemplateTupleList[i].Item2.MyBlock,(i+1)*scoreTemplateTupleList[i].Item2.MyBlock))
+                if (MathExtensions.IsBetweenRange(scoreTemplateTupleList[i].Item1,i*scoreTemplateTupleList[i].Item2.MyBlock,(i+1)*scoreTemplateTupleList[i].Item2.MyBlock))
                 {
-                    canPass = false;
+                    canPass = true;
                 }
             }
             
             Assert.IsTrue(canPass);
-            
+           
+            return scoreTemplateTupleList;
         }
-        
-        // // A Test behaves as an ordinary method
-        
         
         [Test]
         public void a_wild_bonus()
         {
-            TestTargetChance(GetScoreOrder(ScoreCard.CardType.A,ScoreCard.CardType.Wild,ScoreCard.CardType.Bonus));
+           TestTargetChance(GetScoreOrder(ScoreCard.CardType.A,ScoreCard.CardType.Wild,ScoreCard.CardType.Bonus));
         }
         
         [Test]
@@ -139,8 +152,42 @@ namespace Tests
         [Test]
         public void jackpot_jackpot_jackpot()
         {
-            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot));
-        } 
+            int lastElement=0;
+            Queue<int> elementQueue = new Queue<int>();
+            
+            for (int i = 0; i < 10; i++)
+            {
+                var scoreTemplateTupleList = TestTargetChance(GetScoreOrder(ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot));
+                elementQueue.Enqueue(scoreTemplateTupleList[0].Item1);
+            }
+
+            var sameNumberCount = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                var element = elementQueue.Dequeue();
+                if (i!=0)
+                {
+                    if (element == lastElement)
+                    {
+                        sameNumberCount++;
+                    }
+                } 
+                
+                lastElement = element;
+            }
+
+            if (sameNumberCount>=3)
+            {
+                Assert.Fail();
+            }
+            
+        }
+        
+        private void CheckRepeatedScores(List<(int,ScoreTemplateContainer)> tupleList)
+        {
+            var firstElement = tupleList[0];
+            
+        }
         
         
     }

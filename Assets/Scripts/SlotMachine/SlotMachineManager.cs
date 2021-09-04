@@ -48,7 +48,7 @@ namespace SlotMachine
         
         public void InitScoreTemplateContainers(List<ScoreTemplate> scoreList)
         {
-            scoreList.ForEach(x=>_scoreTemplateContainerList.Add(new ScoreTemplateContainer(x)));
+            scoreList.ForEach(x => _scoreTemplateContainerList.Add(new ScoreTemplateContainer(x)));
         }
 
         
