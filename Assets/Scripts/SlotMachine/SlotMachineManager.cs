@@ -9,7 +9,20 @@ using Random = UnityEngine.Random;
 
 namespace SlotMachine
 {
-   
+    [Serializable]
+    public class ScoreTemplateContainer
+    {
+        public ScoreTemplate myTemplate;
+        public int MyBlock { get; private set; }
+        public bool isOpen;
+
+        public ScoreTemplateContainer(ScoreTemplate scoreTemplate,bool isOpen = true)
+        {
+            myTemplate = scoreTemplate;
+            MyBlock = Mathf.RoundToInt(100/myTemplate.chance);
+            this.isOpen = isOpen;
+        }
+    }
     public class SlotMachineManager : MonoBehaviour
     {
         [Header("Machine Slots")]
@@ -32,22 +45,22 @@ namespace SlotMachine
         [SerializeField] private ScoreCard.CardType overrideScoreHitType;
         
         private bool _canPlaySlotMachine = true;
-        private float _totalChance = 0;
-        private int _currentSpinCount=0;
+        private float _totalChance;
+        private int _currentSpinCount;
         private ScoreTemplate _selectedScoreTemplate;
-        private bool _isWin = false;
+        private bool _isWin;
 
+        private List<ScoreTemplateContainer> _scoreTemplateContainerList = new List<ScoreTemplateContainer>();
+        
         #region Setup
 
         private void Start()
         {
-            var chanceMod = _currentSpinCount % _totalChance;
-
-            if (chanceMod == 0)
-            {
-                CalculateScoreChances();
-            }
+            _scoreTemplateContainerList?.Clear();
+            scoreChanceData.scoreList.ForEach(x=>_scoreTemplateContainerList.Add(new ScoreTemplateContainer(x)));
+            
         }
+
 
         private void OnEnable()
         {
@@ -67,20 +80,54 @@ namespace SlotMachine
         private void Update()
         {
 #if UNITY_EDITOR
-            
-            if (Input.GetKeyDown(KeyCode.T)) 
+
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+               
                 for (int i = 0; i < 100; i++)
                     DetermineScore();
+            }
+                
 #endif
         }
 
         #endregion
+
+        private ScoreTemplateContainer _selectedContainer;
         
-        //todo Daha iyi bir algoritma bul
         public void CalculateScoreChances()
         {
-           
+            _selectedContainer = _scoreTemplateContainerList[0];
+            float bestChance = 0;
+            _scoreTemplateContainerList.Shuffle();
+            foreach (var scoreTemplateContainer in _scoreTemplateContainerList)
+            {
+                var mod = _currentSpinCount %  scoreTemplateContainer.MyBlock;
+
+                if (mod == 0)
+                {
+                    scoreTemplateContainer.isOpen = true;
+                }
+                
+                var newChance = (float)1 / (scoreTemplateContainer.MyBlock - mod);
+                
+                if (scoreTemplateContainer.isOpen && newChance>bestChance)
+                {
+                    bestChance = newChance;
+                    _selectedContainer = scoreTemplateContainer;
+                }
+            }
+
+            if (bestChance <=0)
+            {
+                _selectedContainer.isOpen = true;
+            }
             
+            if (_selectedContainer.isOpen)
+            {
+                _selectedScoreTemplate = _selectedContainer.myTemplate;
+                _selectedContainer.isOpen = false;
+            }
             
         }
 
@@ -136,9 +183,7 @@ namespace SlotMachine
         
         private void DetermineScore()
         {
-            
-            //_selectedScoreTemplate = enableOverrideScore ? GetOverrideHitScoreTemplate(overrideScoreHitType) : scoreTemplate;
-            
+            CalculateScoreChances();
             var str =
                 $"Spin: {_currentSpinCount} --- 1. {_selectedScoreTemplate.scoreOrder[0].ToString()} 2. {_selectedScoreTemplate.scoreOrder[1].ToString()} 3. {_selectedScoreTemplate.scoreOrder[2].ToString()}";
             Debug.Log(str);
