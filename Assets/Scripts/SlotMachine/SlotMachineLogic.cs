@@ -8,20 +8,14 @@ namespace SlotMachine
     public static class SlotMachineLogic
     {
         private static ScoreTemplateContainer _selectedContainer;
-        private static List<ScoreTemplateContainer> _scoreTemplateContainerList = new List<ScoreTemplateContainer>();
-        public static void InitScoreTemplateContainers(ScoreChanceData scoreChanceData)
-        {
-             scoreChanceData.scoreList.ForEach(x=>_scoreTemplateContainerList.Add(new ScoreTemplateContainer(x)));
-        }
-        
-        public static ScoreTemplate GetMostPossibleScoreTemplate(int currentSpinCount)
+        public static ScoreTemplate GetMostPossibleScoreTemplate(int currentSpinCount,List<ScoreTemplateContainer> scoreTemplateContainerList)
         {
             ScoreTemplate targetTemplate = null;
             
-            _selectedContainer = _scoreTemplateContainerList[0];
+            _selectedContainer = scoreTemplateContainerList[0];
             float bestChance = 0;
-            _scoreTemplateContainerList.Shuffle();
-            foreach (var scoreTemplateContainer in _scoreTemplateContainerList)
+            scoreTemplateContainerList.Shuffle();
+            foreach (var scoreTemplateContainer in scoreTemplateContainerList)
             {
                 var mod = currentSpinCount %  scoreTemplateContainer.MyBlock;
 

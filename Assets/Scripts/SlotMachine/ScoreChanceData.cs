@@ -16,5 +16,11 @@ namespace SlotMachine
         public List<ScoreCard.CardType> scoreOrder;
         [Range(0,100)]
         public float chance;
+
+        public ScoreTemplate(List<ScoreCard.CardType> scoreOrder, float chance)
+        {
+            this.scoreOrder = scoreOrder;
+            this.chance = chance;
+        }
     }
 }
