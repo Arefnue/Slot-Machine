@@ -21,7 +21,7 @@ namespace Tests
             return newList;
         }
 
-        private void TestTargetChance(float chance)
+        private void TestTargetChance(List<ScoreCard.CardType> targetOrder)
         {
             List<ScoreTemplateContainer> scoreTemplateContainerList = new List<ScoreTemplateContainer>();
 
@@ -54,7 +54,7 @@ namespace Tests
                 scoreTemplateContainerList.Add(new ScoreTemplateContainer(scoreTemplate));
             }
             
-            ScoreTemplateContainer scoreTemplateContainer = scoreTemplateContainerList.FirstOrDefault(x => x.myTemplate.chance == chance);
+            ScoreTemplateContainer scoreTemplateContainer = scoreTemplateContainerList.FirstOrDefault(x => x.myTemplate.scoreOrder == targetOrder);
 
             List<(int, ScoreTemplateContainer)> scoreTemplateTupleList = new List<(int, ScoreTemplateContainer)>();
             for (int i = 0; i < 100; i++)
@@ -80,17 +80,68 @@ namespace Tests
         }
         
         // // A Test behaves as an ordinary method
+        
+        
         [Test]
-        public void slot_machine_chance_5()
+        public void a_wild_bonus()
         {
-            TestTargetChance(5);
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.A,ScoreCard.CardType.Wild,ScoreCard.CardType.Bonus));
+        }
+        
+        [Test]
+        public void wild_wild_seven()
+        {
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Wild,ScoreCard.CardType.Wild,ScoreCard.CardType.Seven));
+        }
+        
+        [Test]
+        public void jackpot_jackpot_a()
+        {
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot,ScoreCard.CardType.A));
+        }
+        
+        [Test]
+        public void wild_bonus_a()
+        {
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Wild,ScoreCard.CardType.Bonus,ScoreCard.CardType.A));
+        }
+        
+        [Test]
+        public void bonus_a_jackpot()
+        {
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Bonus,ScoreCard.CardType.A,ScoreCard.CardType.Jackpot));
+        }
+        
+        [Test]
+        public void a_a_a()
+        {
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.A,ScoreCard.CardType.A,ScoreCard.CardType.A));
         } 
         
         [Test]
-        public void slot_machine_chance_13()
+        public void bonus_bonus_bonus()
         {
-            TestTargetChance(13);
-        }
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Bonus,ScoreCard.CardType.Bonus,ScoreCard.CardType.Bonus));
+        } 
+        
+        [Test]
+        public void seven_seven_seven()
+        {
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Seven,ScoreCard.CardType.Seven,ScoreCard.CardType.Seven));
+        } 
+        
+        [Test]
+        public void wild_wild_wild()
+        {
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Wild,ScoreCard.CardType.Wild,ScoreCard.CardType.Wild));
+        } 
+        
+        [Test]
+        public void jackpot_jackpot_jackpot()
+        {
+            TestTargetChance(GetScoreOrder(ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot));
+        } 
+        
         
     }
 }
