@@ -9,20 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace SlotMachine
 {
-    [Serializable]
-    public class ScoreTemplateContainer
-    {
-        public ScoreTemplate myTemplate;
-        public int MyBlock { get; private set; }
-        public bool isOpen;
-
-        public ScoreTemplateContainer(ScoreTemplate scoreTemplate,bool isOpen = true)
-        {
-            myTemplate = scoreTemplate;
-            MyBlock = Mathf.RoundToInt(100/myTemplate.chance);
-            this.isOpen = isOpen;
-        }
-    }
+    
     public class SlotMachineManager : MonoBehaviour
     {
         [Header("Machine Slots")]
@@ -49,19 +36,14 @@ namespace SlotMachine
         private int _currentSpinCount;
         private ScoreTemplate _selectedScoreTemplate;
         private bool _isWin;
-
-        private List<ScoreTemplateContainer> _scoreTemplateContainerList = new List<ScoreTemplateContainer>();
         
         #region Setup
 
         private void Start()
         {
-            _scoreTemplateContainerList?.Clear();
-            scoreChanceData.scoreList.ForEach(x=>_scoreTemplateContainerList.Add(new ScoreTemplateContainer(x)));
-            
+           SlotMachineLogic.InitScoreTemplateContainers(scoreChanceData);
         }
-
-
+        
         private void OnEnable()
         {
             foreach (var slotController in slotControllerList)
@@ -92,45 +74,7 @@ namespace SlotMachine
         }
 
         #endregion
-
-        private ScoreTemplateContainer _selectedContainer;
         
-        public void CalculateScoreChances()
-        {
-            _selectedContainer = _scoreTemplateContainerList[0];
-            float bestChance = 0;
-            _scoreTemplateContainerList.Shuffle();
-            foreach (var scoreTemplateContainer in _scoreTemplateContainerList)
-            {
-                var mod = _currentSpinCount %  scoreTemplateContainer.MyBlock;
-
-                if (mod == 0)
-                {
-                    scoreTemplateContainer.isOpen = true;
-                }
-                
-                var newChance = (float)1 / (scoreTemplateContainer.MyBlock - mod);
-                
-                if (scoreTemplateContainer.isOpen && newChance>bestChance)
-                {
-                    bestChance = newChance;
-                    _selectedContainer = scoreTemplateContainer;
-                }
-            }
-
-            if (bestChance <=0)
-            {
-                _selectedContainer.isOpen = true;
-            }
-            
-            if (_selectedContainer.isOpen)
-            {
-                _selectedScoreTemplate = _selectedContainer.myTemplate;
-                _selectedContainer.isOpen = false;
-            }
-            
-        }
-
         #region Routines
 
         private IEnumerator StartSlotsRoutine()
@@ -183,7 +127,7 @@ namespace SlotMachine
         
         private void DetermineScore()
         {
-            CalculateScoreChances();
+            _selectedScoreTemplate =SlotMachineLogic.GetMostPossibleScoreTemplate(_currentSpinCount);
             var str =
                 $"Spin: {_currentSpinCount} --- 1. {_selectedScoreTemplate.scoreOrder[0].ToString()} 2. {_selectedScoreTemplate.scoreOrder[1].ToString()} 3. {_selectedScoreTemplate.scoreOrder[2].ToString()}";
             Debug.Log(str);

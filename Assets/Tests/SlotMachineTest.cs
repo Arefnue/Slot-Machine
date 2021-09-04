@@ -26,9 +26,7 @@ namespace Tests
             // Use yield to skip a frame.
             var gameObject = new GameObject();
             var slotMachine = gameObject.AddComponent<SlotMachineManager>();
-            
-            slotMachine.CalculateScoreChances();
-            
+
             yield return null;
         }
     }
