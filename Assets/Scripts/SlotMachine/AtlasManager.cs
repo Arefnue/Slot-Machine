@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.U2D;
 
 namespace SlotMachine
 {
     public class AtlasManager : MonoBehaviour
     {
-        public static AtlasManager instance;
+        public static AtlasManager Instance;
         private AtlasManager(){}
         
         [SerializeField] private SpriteAtlas mainAtlas;
@@ -15,7 +13,7 @@ namespace SlotMachine
         
         private void Awake()
         {
-            instance = this;
+            Instance = this;
             var atlasObjects = FindObjectsOfType<AtlasObject>();
             foreach (var atlasObject in atlasObjects)
                 atlasObject.ConvertSpritesToAtlas(mainAtlas);

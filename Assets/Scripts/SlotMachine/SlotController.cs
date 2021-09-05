@@ -29,12 +29,11 @@ namespace SlotMachine
         [SerializeField] private AnimationCurve stopSpinSpeedCurve;
         [SerializeField] private float normalSpinStopTime = 1f;
         [SerializeField] private float slowSpinStopTime = 2.25f;
-
-        public float FinishDelayTime => _myStopType == StopType.Slow ? slowSpinStopTime : _myStopType == StopType.Normal ? normalSpinStopTime : 0.2f;
+        
         public ScoreCard SelectedScoreCard { get; private set; }
     
-        private bool _canSpin=false;
-        private bool _isSpinning = false;
+        private bool _canSpin;
+        private bool _isSpinning;
         private StopType _myStopType = StopType.Instant;
         private ScoreCard.CardType _targetCardType = ScoreCard.CardType.A;
         public Action OnFinalSpinEnd;

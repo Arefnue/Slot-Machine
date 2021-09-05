@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Extensions;
-using UnityEngine;
 
 namespace SlotMachine
 {
@@ -10,8 +9,6 @@ namespace SlotMachine
         private static ScoreTemplateContainer _selectedContainer;
         public static ScoreTemplate GetMostPossibleScoreTemplate(int currentSpinCount,List<ScoreTemplateContainer> scoreTemplateContainerList)
         {
-            ScoreTemplate targetTemplate = null;
-            
             _selectedContainer = scoreTemplateContainerList[0];
             float bestChance = 0;
             scoreTemplateContainerList.Shuffle();
@@ -43,7 +40,7 @@ namespace SlotMachine
             }
                 
             
-            targetTemplate = _selectedContainer.myTemplate;
+            var targetTemplate = _selectedContainer.myTemplate;
             _selectedContainer.isOpen = false;
 
             return targetTemplate;
@@ -64,7 +61,7 @@ namespace SlotMachine
         public ScoreTemplateContainer(ScoreTemplate scoreTemplate,bool isOpen = true)
         {
             myTemplate = scoreTemplate;
-            _myBlock = Mathf.RoundToInt(100/myTemplate.chance);
+            _myBlock = (int)Math.Round(100/myTemplate.chance);
             this.isOpen = isOpen;
         }
     }
