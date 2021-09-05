@@ -16,7 +16,7 @@ namespace Tests
             _scoreList = GetExampleScoreList();
         }
         
-        [Category("Score Test")]
+        [Category("Score Test"),Description("Checks all scores by their blocks in percent")]
         [TestCase(ScoreCard.CardType.A,ScoreCard.CardType.Wild,ScoreCard.CardType.Bonus)]
         [TestCase(ScoreCard.CardType.Wild,ScoreCard.CardType.Wild,ScoreCard.CardType.Seven)]
         [TestCase(ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot,ScoreCard.CardType.A)]
@@ -32,7 +32,7 @@ namespace Tests
             TestTargetChance(GetScoreOrder(card1, card2, card3));
         }
         
-        [Category("Repeat Test")]
+        [Category("Repeat Test"),Description("Checks the probability of coming to the same place in a row. Default 3/10")]
         [TestCase(ScoreCard.CardType.A,ScoreCard.CardType.Wild,ScoreCard.CardType.Bonus)]
         [TestCase(ScoreCard.CardType.Wild,ScoreCard.CardType.Wild,ScoreCard.CardType.Seven)]
         [TestCase(ScoreCard.CardType.Jackpot,ScoreCard.CardType.Jackpot,ScoreCard.CardType.A)]
@@ -72,7 +72,7 @@ namespace Tests
                 lastElement = element;
             }
         
-            if (sameNumberCount >= threshold) Assert.Fail();
+            Assert.GreaterOrEqual(threshold,sameNumberCount);
         }
 
         private List<(int, ScoreTemplateContainer)> TestTargetChance(List<ScoreCard.CardType> targetOrder)
