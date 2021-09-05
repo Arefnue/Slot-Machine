@@ -26,6 +26,8 @@ namespace SlotMachine
         
         [Header("References")]
         [SerializeField] private Button playButton;
+        [SerializeField] private Button resetButton;
+        
         [SerializeField] private CoinSpawner coinSpawner;
         [SerializeField] private ScoreChanceData scoreChanceData;
         
@@ -44,14 +46,19 @@ namespace SlotMachine
 
         private void Start()
         {
-           InitScoreTemplateContainers(scoreChanceData.scoreList);
-        }
+            var loadData = SaveLoad.Load<SaveData>();
 
-        private void InitScoreTemplateContainers(List<ScoreTemplate> scoreList)
-        {
-            scoreList.ForEach(x => _scoreTemplateContainerList.Add(new ScoreTemplateContainer(x)));
+            if (loadData != null)
+            {
+                _currentSpinCount = loadData.lastSpinCount;
+                _scoreTemplateContainerList = loadData.lastScoreTemplateContainerList;
+            }
+            else
+            { 
+                ResetSave();
+            }
         }
-
+        
         
         private void OnEnable()
         {
@@ -65,25 +72,13 @@ namespace SlotMachine
                 slotController.OnFinalSpinEnd -= OnFinalSpinEnd;
         }
 
-        #endregion
-
-        #region Test
-        private void Update()
+        private void OnDestroy()
         {
-#if UNITY_EDITOR
-
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-               
-                for (int i = 0; i < 100; i++)
-                    DetermineScore();
-            }
-                
-#endif
+            SaveLoad.Save(new SaveData(_currentSpinCount,_scoreTemplateContainerList));
         }
 
         #endregion
-        
+
         #region Routines
 
         private IEnumerator StartSlotsRoutine()
@@ -123,7 +118,13 @@ namespace SlotMachine
         #endregion
 
         #region Methods
-        
+
+        public void ResetSave()
+        {
+            _currentSpinCount = 0;
+            scoreChanceData.scoreList.ForEach(x => _scoreTemplateContainerList.Add(new ScoreTemplateContainer(x)));
+            SaveLoad.Save(new SaveData(_currentSpinCount,_scoreTemplateContainerList));
+        }
         private void OnFinalSpinEnd()
         {
             slotControllerList.ForEach(slotController =>
@@ -167,6 +168,7 @@ namespace SlotMachine
         {
             _canPlaySlotMachine = canPlay;
             playButton.interactable = canPlay;
+            resetButton.interactable = canPlay;
         }
 
         #endregion

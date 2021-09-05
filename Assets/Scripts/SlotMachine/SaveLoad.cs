@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -34,10 +36,23 @@ namespace SlotMachine
             return data;
         }
 
-        
         private static string GetSavePath()
         {
             return Application.persistentDataPath + "/game.data";
+        }
+
+    }
+
+    [Serializable]
+    public class SaveData
+    {
+        public int lastSpinCount;
+        public List<ScoreTemplateContainer> lastScoreTemplateContainerList;
+
+        public SaveData(int lastSpinCount,List<ScoreTemplateContainer> lastScoreTemplateContainerList)
+        {
+            this.lastSpinCount = lastSpinCount;
+            this.lastScoreTemplateContainerList = lastScoreTemplateContainerList;
         }
 
     }
