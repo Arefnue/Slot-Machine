@@ -15,6 +15,7 @@ namespace SlotMachine
             _selectedContainer = scoreTemplateContainerList[0];
             float bestChance = 0;
             scoreTemplateContainerList.Shuffle();
+            
             foreach (var scoreTemplateContainer in scoreTemplateContainerList)
             {
                 var mod = currentSpinCount %  scoreTemplateContainer.MyBlock;
@@ -36,16 +37,14 @@ namespace SlotMachine
                 }
             }
 
-            if (bestChance <=0)
+            if (bestChance <= 0)
             {
                 _selectedContainer.isOpen = true;
             }
+                
             
-            if (_selectedContainer.isOpen)
-            {
-                targetTemplate = _selectedContainer.myTemplate;
-                _selectedContainer.isOpen = false;
-            }
+            targetTemplate = _selectedContainer.myTemplate;
+            _selectedContainer.isOpen = false;
 
             return targetTemplate;
         }
@@ -54,21 +53,16 @@ namespace SlotMachine
     [Serializable]
     public class ScoreTemplateContainer
     {
-       
         public ScoreTemplate myTemplate;
         public int MyBlock => _myBlock;
-        private int _myBlock;
         public bool isOpen;
         
-        public int RepeatCount
-        {
-            get => _repeatCount;
-            set => _repeatCount = value;
-        }
+        public int RepeatCount {get => _repeatCount; set => _repeatCount = value; }
+        
         private int _repeatCount;
+        private int _myBlock;
         public ScoreTemplateContainer(ScoreTemplate scoreTemplate,bool isOpen = true)
         {
-            
             myTemplate = scoreTemplate;
             _myBlock = Mathf.RoundToInt(100/myTemplate.chance);
             this.isOpen = isOpen;
